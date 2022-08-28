@@ -22,10 +22,35 @@ class BirdsController < ApplicationController
     end
   end
 
+  #PATCH/ PUT
+  def update
+    bird = Bird.find_by(id: params[:id])
+    if bird
+      bird.update(bird_params)
+      render json: bird
+    else
+      render json: { error: "Bird not found"}, status: :not_found
+    end
+
+  end
+
+  # PATCH custom action
+  def increment_likes
+    bird = Bird.find_by(id: params[:id])
+    if bird
+      bird.update(likes: bird.likes + 1)
+      render json: bird
+    else
+      render json: { error: "Bird not found" }, status: :not_found
+    end
+
+  end
+  
   private
 
+  # Mass assignment strong params
   def bird_params
-    params.permit(:name, :species)
+    params.permit(:name, :species, :likes)
   end
 
 end
